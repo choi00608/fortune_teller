@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사주 분석 결과</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #4a4a4a;
+            padding-bottom: 10px;
+        }
+        /* Tab container */
+        .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px 5px 0 0;
+        }
+        /* Tab buttons */
+        .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            font-size: 17px;
+        }
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+            background-color: #ddd;
+        }
+        /* Create an active/current tablink class */
+        .tab button.active {
+            background-color: #ccc;
+        }
+        /* Style the tab content */
+        .tabcontent {
+            display: none;
+            padding: 20px 12px;
+            border: 1px solid #ccc;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+        }
+        h2 {
+            color: #4a4a4a;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+        }
+        .pillar {
+            background: #e9ecef;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        .pillar h3 {
+            margin-top: 0;
+            color: #0056b3;
+        }
+        .error {
+            color: #d9534f;
+            font-weight: bold;
+        }
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>사주 분석 결과</h1>
+
+        {% if saju_result and not saju_result.error %}
+            <div class="tab">
+                <button class="tablinks" onclick="openTab(event, 'Summary')" id="defaultOpen">사주 요약</button>
+                <button class="tablinks" onclick="openTab(event, 'Pillars')">사주팔자</button>
+                <button class="tablinks" onclick="openTab(event, 'Elements')">오행 분석</button>
+                <button class="tablinks" onclick="openTab(event, 'Luck')">인생 총운</button>
+                <button class="tablinks" onclick="openTab(event, 'Today')">오늘의 운세</button>
+                {% if saju_result.answer and saju_result.answer.analysis %}
+                <button class="tablinks" onclick="openTab(event, 'Answer')">궁금한 점 답변</button>
+                {% endif %}
+            </div>
+
+            <div id="Summary" class="tabcontent">
+                <h2>사주 요약</h2>
+                <p>{{ saju_result.saju_summary }}</p>
+            </div>
+
+            <div id="Pillars" class="tabcontent">
+                <h2>사주팔자</h2>
+                <div class="pillar">
+                    <h3>{{ saju_result.year_pillar.name }} (연주)</h3>
+                    <p><strong>천간/지지:</strong> {{ saju_result.year_pillar.heavenly_stem }} / {{ saju_result.year_pillar.earthly_branch }}</p>
+                    <p><strong>분석:</strong> {{ saju_result.year_pillar.analysis }}</p>
+                </div>
+                <div class="pillar">
+                    <h3>{{ saju_result.month_pillar.name }} (월주)</h3>
+                    <p><strong>천간/지지:</strong> {{ saju_result.month_pillar.heavenly_stem }} / {{ saju_result.month_pillar.earthly_branch }}</p>
+                    <p><strong>분석:</strong> {{ saju_result.month_pillar.analysis }}</p>
+                </div>
+                <div class="pillar">
+                    <h3>{{ saju_result.day_pillar.name }} (일주)</h3>
+                    <p><strong>천간/지지:</strong> {{ saju_result.day_pillar.heavenly_stem }} / {{ saju_result.day_pillar.earthly_branch }}</p>
+                    <p><strong>분석:</strong> {{ saju_result.day_pillar.analysis }}</p>
+                </div>
+                <div class="pillar">
+                    <h3>{{ saju_result.hour_pillar.name }} (시주)</h3>
+                    <p><strong>천간/지지:</strong> {{ saju_result.hour_pillar.heavenly_stem }} / {{ saju_result.hour_pillar.earthly_branch }}</p>
+                    <p><strong>분석:</strong> {{ saju_result.hour_pillar.analysis }}</p>
+                </div>
+            </div>
+
+            <div id="Elements" class="tabcontent">
+                <h2>오행 분석</h2>
+                <p>{{ saju_result.five_elements.analysis }}</p>
+            </div>
+
+            <div id="Luck" class="tabcontent">
+                <h2>인생 총운</h2>
+                <p><strong>초년운:</strong> {{ saju_result.overall_luck.early_life }}</p>
+                <p><strong>중년운:</strong> {{ saju_result.overall_luck.middle_age }}</p>
+                <p><strong>말년운:</strong> {{ saju_result.overall_luck.later_life }}</p>
+            </div>
+
+            <div id="Today" class="tabcontent">
+                <h2>오늘의 운세</h2>
+                <p><strong>사랑운:</strong> {{ saju_result.today_luck.love }}</p>
+                <p><strong>직업운:</strong> {{ saju_result.today_luck.career }}</p>
+                <p><strong>건강운:</strong> {{ saju_result.today_luck.health }}</p>
+                <p><strong>재물운:</strong> {{ saju_result.today_luck.wealth }}</p>
+            </div>
+
+            {% if saju_result.answer and saju_result.answer.analysis %}
+            <div id="Answer" class="tabcontent">
+                <h2>궁금한 점에 대한 답변</h2>
+                <p>{{ saju_result.answer.analysis }}</p>
+            </div>
+            {% endif %}
+
+        {% elif saju_result.error %}
+            <p class="error">오류: {{ saju_result.error }}</p>
+        {% else %}
+            <p class="error">알 수 없는 오류가 발생했습니다. 다시 시도해주세요.</p>
+        {% endif %}
+
+        <a href="/">다시 분석하기</a>
+    </div>
+
+    <script>
+        function openTab(evt, tabName) {
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(tabName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        // Get the element with id="defaultOpen" and click on it
+        document.getElementById("defaultOpen").click();
+    </script>
+
+</body>
+</html>

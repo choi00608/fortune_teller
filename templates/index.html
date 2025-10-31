@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>사주 정보 입력</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: #fff;
+            padding: 2em;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+        }
+        h1 {
+            text-align: center;
+            color: #4a4a4a;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+        input[type="text"] {
+            padding: 0.8em;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 1em;
+            font-size: 1em;
+        }
+        input[type="submit"] {
+            background-color: #007bff;
+            color: white;
+            padding: 0.8em;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background-color 0.3s;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>사주 정보 입력</h1>
+        <form action="/result" method="post">
+            <label for="year">생년 (예: 1995)</label>
+            <input type="text" id="year" name="year" required>
+            
+            <label for="month">생월 (예: 10)</label>
+            <input type="text" id="month" name="month" required>
+            
+            <label for="day">생일 (예: 20)</label>
+            <input type="text" id="day" name="day" required>
+            
+            <label for="hour">생시 (0-23 사이, 예: 11)</label>
+            <input type="text" id="hour" name="hour" required>
+
+            <label for="location">태어난 지역 (예: 서울)</label>
+            <input type="text" id="location" name="location" required>
+
+            <label for="question">궁금한 점 (예: 오늘의 행운의 색상은?)</label>
+            <textarea id="question" name="question" rows="3"></textarea><br>
+            
+            <input type="submit" value="분석하기" onclick="showLoading()">
+        </form>
+    </div>
+
+    <script>
+        function showLoading() {
+            const form = document.querySelector('form');
+            const container = document.querySelector('.container');
+
+            // Hide the form instead of removing it
+            form.style.display = 'none';
+
+            // Create and append loading message
+            const loadingMessage = document.createElement('div');
+            loadingMessage.innerHTML = '<h1>결과를 가져오고 있습니다.</h1><p>잠시만 기다려주세요. (소요시간 약 1분)</p><p>곧 나올 사주 내용은 AI 바탕으로 작성되었습니다.</p><p>때문에 부정확한 해석을 포함 할수도 있습니다. </p>';
+            container.appendChild(loadingMessage);
+        }
+    </script>
+</body>
+</html>
