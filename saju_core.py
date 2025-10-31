@@ -1,8 +1,6 @@
-import os
 import google.generativeai as genai
 from google import genai
 import re
-import json
 
 def extract_json_from_string(text: str) -> str | None:
     """
